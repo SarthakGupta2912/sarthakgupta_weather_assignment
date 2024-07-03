@@ -1,4 +1,4 @@
-#WeatherApp
+WeatherApp
 WeatherApp is a Flutter-based application that allows users to get real-time weather information for any city. The app uses the WeatherAPI to fetch and display current weather details such as temperature, humidity, wind speed, and weather conditions.
 
 Features
