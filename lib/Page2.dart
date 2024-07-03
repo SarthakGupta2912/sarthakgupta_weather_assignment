@@ -23,6 +23,7 @@ class _Page2State extends State<Page2> {
     weatherDataFuture = fetchWeather(city);
   }
 
+
   Future<Map<String, dynamic>> fetchWeather(String city) async {
     const apiKey = '6233729271b0443193a154447240207';
     final response = await http.get(

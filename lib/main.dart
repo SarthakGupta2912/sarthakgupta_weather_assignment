@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart'; // Import the services package
 import 'Page2.dart';
+import 'package:http/http.dart' as http;
 
 dynamic weatherData;
 final TextEditingController controller = TextEditingController();
+
 void main() {
 
 
@@ -36,9 +40,45 @@ class WeatherApp extends StatefulWidget {
 }
 
 class _WeatherAppState extends State<WeatherApp> {
+  Future<bool> checkCity(String city) async {
+    const apiKey = '6233729271b0443193a154447240207';
+    final response = await http.get(
+      Uri.parse('http://api.weatherapi.com/v1/search.json?key=$apiKey&q=$city'),
+    );
 
+    if (response.statusCode == 200) {
+      List<dynamic> cityResponse = json.decode(response.body);
 
+      if (cityResponse.isNotEmpty) {
+        bool cityFound = false;
+        for(int i=0;i<cityResponse.length; i++){
+          if(cityResponse[i]['name'].toString().toLowerCase() == controller.text.toLowerCase()){
+            cityFound=true;
+            break;
+          }
+        }
+        return cityFound;
+      } else {
+        return false;
+      }
+    } else {
+      throw Exception('Failed to load city data');
+    }
+  }
 
+  void getWeather() async {
+    if (await checkCity(controller.text)) {
+      Get.to(const Page2());
+    } else {
+      Get.snackbar(
+        'Error',
+        'City not found. Please enter a valid city.',
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +100,8 @@ class _WeatherAppState extends State<WeatherApp> {
           onPressed: () {
             Get.closeAllSnackbars();
             if(controller.text.isNotEmpty) {
-              Get.to(const Page2());
+              getWeather();
+
             }
             else{
               Get.snackbar(
