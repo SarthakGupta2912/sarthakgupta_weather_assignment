@@ -15,7 +15,7 @@ class Page2 extends StatefulWidget {
 
 class _Page2State extends State<Page2> {
   late Future<Map<String, dynamic>> weatherDataFuture;
-  String city = controller.text; // Replace with the default city
+  String city = controller.text; 
 
   @override
   void initState() {
