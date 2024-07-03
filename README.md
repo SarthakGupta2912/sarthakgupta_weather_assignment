@@ -8,4 +8,4 @@ Features
 -Full-Screen Mode: Runs in full-screen mode for an immersive user experience.
 
 How to run the app.
-1. Download and install app-release.apk.
+1. Download and install "SarthakGupta_Assignment.apk".
