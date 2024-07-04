@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -39,6 +40,21 @@ class WeatherApp extends StatefulWidget {
 
 class _WeatherAppState extends State<WeatherApp> {
   final RegExp regExp = RegExp(r'[a-zA-Z\s]');
+  //check internet connection
+  Future<bool> hasInternetConnection() async {
+    debugPrint('Checking internet connection ...');
+    try {
+      final result = await InternetAddress.lookup('www.google.com');
+      if (result.isNotEmpty) {
+        if (result[0].rawAddress.isNotEmpty) {
+          return true;
+        }
+      }
+    } on SocketException catch (_) {
+      return false;
+    }
+    return false;
+  }
   Future<bool> checkCity(String city) async {
     const apiKey = '6233729271b0443193a154447240207';
     final response = await http.get(
@@ -108,11 +124,23 @@ onChanged: _onTextChanged,
         ),
         ElevatedButton(
 
-          onPressed: () {
+          onPressed: () async {
             Get.closeAllSnackbars();
             if(controller.text.isNotEmpty) {
-              getWeather();
+              if(await hasInternetConnection()) {
+                getWeather();
+              }
+              else{
+                Get.snackbar(
+                    'Error',
+                    'Please check your internet connection',
+                    snackPosition: SnackPosition.BOTTOM,
+                    backgroundColor: Colors.red,
+                    colorText: Colors.white,
+                    icon: const Icon(Icons.error)
 
+                );
+              }
             }
             else{
               Get.snackbar(
