@@ -19,7 +19,6 @@ void main() {
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
-
   @override
   Widget build(BuildContext context) {
     return const GetMaterialApp(
@@ -34,12 +33,12 @@ class MainApp extends StatelessWidget {
 
 class WeatherApp extends StatefulWidget {
   const WeatherApp({super.key});
-
   @override
   _WeatherAppState createState() => _WeatherAppState();
 }
 
 class _WeatherAppState extends State<WeatherApp> {
+  final RegExp regExp = RegExp(r'[a-zA-Z\s]');
   Future<bool> checkCity(String city) async {
     const apiKey = '6233729271b0443193a154447240207';
     final response = await http.get(
@@ -70,6 +69,7 @@ class _WeatherAppState extends State<WeatherApp> {
     if (await checkCity(controller.text)) {
       Get.to(const Page2());
     } else {
+      Get.closeAllSnackbars();
       Get.snackbar(
         'Error',
         'City not found. Please enter a valid city.',
@@ -77,6 +77,13 @@ class _WeatherAppState extends State<WeatherApp> {
         backgroundColor: Colors.red,
         colorText: Colors.white,
       );
+    }
+  }
+  void _onTextChanged(String text) {
+    final filteredText = text.replaceAll(RegExp(r'[^a-zA-Z\s]'), '');
+    if (text != filteredText) {
+      controller.text = filteredText;
+      controller.selection = TextSelection.collapsed(offset: filteredText.length);
     }
   }
 
@@ -89,6 +96,10 @@ class _WeatherAppState extends State<WeatherApp> {
           padding: const EdgeInsets.all(8.0),
           child: TextField(
             controller: controller,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(50),
+            ],
+onChanged: _onTextChanged,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'Enter City',
