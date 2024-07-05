@@ -137,6 +137,7 @@ onChanged: _onTextChanged,
                     snackPosition: SnackPosition.BOTTOM,
                     backgroundColor: Colors.red,
                     colorText: Colors.white,
+
                     icon: const Icon(Icons.error)
 
                 );
