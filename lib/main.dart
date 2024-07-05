@@ -63,11 +63,12 @@ class _WeatherAppState extends State<WeatherApp> {
 
     if (response.statusCode == 200) {
       List<dynamic> cityResponse = json.decode(response.body);
+      debugPrint('test2912: ${cityResponse}');
 
       if (cityResponse.isNotEmpty) {
         bool cityFound = false;
         for(int i=0;i<cityResponse.length; i++){
-          if(cityResponse[i]['name'].toString().toLowerCase() == controller.text.toLowerCase()){
+          if(cityResponse[i]['name'].toString().toLowerCase() == controller.text.toLowerCase().trim()){
             cityFound=true;
             break;
           }
@@ -82,7 +83,7 @@ class _WeatherAppState extends State<WeatherApp> {
   }
 
   void getWeather() async {
-    if (await checkCity(controller.text)) {
+    if (await checkCity(controller.text.trim())) {
       Get.to(const Page2());
     } else {
       Get.closeAllSnackbars();
